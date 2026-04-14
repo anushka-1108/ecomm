@@ -1,5 +1,6 @@
 package com.ecommerce.ecomm.controller;
 
+import com.ecommerce.ecomm.config.AppConstants;
 import com.ecommerce.ecomm.model.Category;
 import com.ecommerce.ecomm.payload.CategoryDTO;
 import com.ecommerce.ecomm.payload.CategoryResponse;
@@ -16,16 +17,19 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api")
 
 public class CategoryController {
-    @GetMapping("/echo")
-    public ResponseEntity<String> echoMessage(@RequestParam(name = "message") String message){
+    /*@GetMapping("/echo")
+    public ResponseEntity<String> echoMessage(@RequestParam(name = "message",defaultValue="hello") String message){
         return new ResponseEntity<>("Echoed Message: " + message, HttpStatus.OK);
-    }
+    }*/
+
     @Autowired
     private CategoryService categoryService;
 
     @GetMapping("/public/categories")
-    public ResponseEntity<CategoryResponse> getAllCategories(){
-        CategoryResponse categoryResponse=categoryService.getAllCategories();
+    public ResponseEntity<CategoryResponse> getAllCategories(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required=false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required=false) Integer pageSize){
+        CategoryResponse categoryResponse=categoryService.getAllCategories(pageNumber,pageSize);
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
     @PostMapping("/public/categories")
